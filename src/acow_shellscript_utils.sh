@@ -47,3 +47,30 @@ fatal()
     echo "[FATAL] $@";
     exit 1;
 }
+
+
+as_super_user()
+{
+    local SUDO="";
+    test $UID != 0 && SUDO="sudo ";
+    
+    $SUDO "$@";
+}
+
+find_real_user_home()
+{
+    local REAL_USER_HOME="";
+
+    if [ $UID == 0 ]; then
+        local USER=$(printenv SUDO_USER);
+        if [ -z "$USER" ]; then            
+            REAL_USER_HOME="$HOME";
+        else
+            REAL_USER_HOME=$(getent passwd "$USER" | cut -d: -f6);
+        fi;
+    else    
+        REAL_USER_HOME="$HOME";
+    fi;
+
+    echo "$REAL_USER_HOME";
+}
