@@ -95,25 +95,48 @@ to_lower()
     echo $(echo $1 | tr [:upper:] [:lower:]);
 }
 
-center_text()
+left_text()
 {
-    local TEXT="$1";
-    local FILL="$3";
     local COLS=$(tput cols);
+
+    local TEXT=$(remove_color_sequences "$1");
     local TEXT_LEN=${#TEXT};
 
-    test -z "$FILL" && FILL="-";
-    local FILL_LEN=${#FILL};
-    local FILL_LEN2=$(( FILL_LEN * 2 ));
+    local FILL_TEXT="$2";
+    test -z "$FILL_TEXT" && FILL_TEXT="-";
+    local FILL_TEXT_LEN=${#FILL_TEXT};
 
-    local FILL_TIMES=$(( COLS / FILL_LEN2  - TEXT_LEN / 2 ));
+    local FILL_LEN=$(( (COLS - TEXT_LEN) / FILL_TEXT_LEN ));
     local FILL_LINE="";
 
-    for i in $(seq 1 $FILL_TIMES); do
-        FILL_LINE+=$FILL;
+    for i in $(seq 1 $FILL_LEN); do
+        FILL_LINE+="$FILL_TEXT";
     done
 
-    echo -n "${FILL_LINE}${TEXT}${FILL_LINE}";
+    echo -e "${1}${FILL_LINE}";
+}
+
+center_text()
+{
+    local COLS=$(tput cols);
+
+    local TEXT="$(remove_color_sequences "$1")";
+    local TEXT_LEN=${#TEXT};
+
+    local FILL_TEXT="$2";
+    test -z "$FILL_TEXT" && FILL_TEXT="-";
+
+    local FILL_TEXT_LEN=${#FILL_TEXT};
+    local FILL_TEXT_LEN2=$(( FILL_TEXT_LEN * 2 ));
+
+    local FILL_LEN=$(( COLS / FILL_TEXT_LEN2 - TEXT_LEN / 2 ));
+    local FILL_LINE="";
+
+    for i in $(seq 1 $FILL_LEN); do
+        FILL_LINE+="$FILL_TEXT";
+    done
+
+    echo -e "${FILL_LINE}${1}${FILL_LINE}";
 }
 
 
