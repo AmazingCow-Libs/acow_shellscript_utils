@@ -74,6 +74,14 @@ get_script_dir()
     echo "$SCRIPT_DIR";
 }
 
+get_user_home()
+{
+    local USER="$1";
+    test -z "$USER" && USER=$(whoami);
+
+    echo $(getent passwd "$USER" | cut -d: -f6);
+}
+
 
 ##----------------------------------------------------------------------------##
 ## Text Utilities                                                             ##
