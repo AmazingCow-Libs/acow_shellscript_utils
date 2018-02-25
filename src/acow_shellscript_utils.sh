@@ -90,6 +90,7 @@ trim()
 {
     echo "$1" | xargs
 }
+
 to_lower()
 {
     echo $(echo $1 | tr [:upper:] [:lower:]);
@@ -149,12 +150,14 @@ fatal()
     exit 1;
 }
 
-
+##----------------------------------------------------------------------------##
+## User                                                                       ##
+##----------------------------------------------------------------------------##
 as_super_user()
 {
     local SUDO="";
     test $UID != 0 && SUDO="sudo ";
-    
+
     $SUDO "$@";
 }
 
@@ -164,12 +167,12 @@ find_real_user_home()
 
     if [ $UID == 0 ]; then
         local USER=$(printenv SUDO_USER);
-        if [ -z "$USER" ]; then            
+        if [ -z "$USER" ]; then
             REAL_USER_HOME="$HOME";
         else
             REAL_USER_HOME=$(getent passwd "$USER" | cut -d: -f6);
         fi;
-    else    
+    else
         REAL_USER_HOME="$HOME";
     fi;
 
