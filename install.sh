@@ -19,4 +19,5 @@
 ##                                                                            ##
 ##---------------------------------------------------------------------------~##
 
+mkdir -p /usr/local/src
 cp ./src/acow_shellscript_utils.sh /usr/local/src
