@@ -120,7 +120,29 @@ count_words()
 
 trim()
 {
-    echo "$1" | xargs
+    local value="$1";
+    local value_len="${#value}";
+
+    local trim_char="$2";
+    test -z "$trim_char" && trim_char=" ";
+
+    ## begin.
+    local beg=0;
+    for (( i=0; i < $value_len; ++i )); do
+        local curr_char=${value:i:1};
+        test "$curr_char" != "$trim_char" && break;
+        beg=$(( $i + 1 ));
+    done;
+
+    ## end.
+    local end="$(( value_len -1 ))";
+    for (( i=$(( value_len -1 )); i > $beg; --i )); do
+        local curr_char=${value:i:1};
+        test "$curr_char" != "$trim_char" && break;
+        end=$(( $i ));
+    done;
+
+    echo ${value:beg:$(( end - beg ))};
 }
 
 to_lower()
